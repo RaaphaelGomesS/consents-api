@@ -19,7 +19,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ConsentServiceTest {
 
@@ -91,6 +91,34 @@ class ConsentServiceTest {
             when(repository.findById(any())).thenReturn(Optional.empty());
 
             consentService.findConsentById(ConstantsMocks.ID);
+        });
+
+        Exception expectedException = new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND);
+
+        assertInstanceOf(ConsentException.class, actualException);
+        assertEquals(expectedException.getCause(), actualException.getCause());
+        assertEquals(expectedException.getMessage(), actualException.getMessage());
+    }
+
+    @Test
+    void shouldRevokeConsentById() {
+        assertDoesNotThrow(() -> {
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+
+            consentService.revokeConsent(ConstantsMocks.ID);
+
+            verify(repository, times(1)).save(any());
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCantFindConsentToRevoke() {
+        Exception actualException = assertThrows(Exception.class, () -> {
+
+            when(repository.findById(any())).thenReturn(Optional.empty());
+
+            consentService.revokeConsent(ConstantsMocks.ID);
         });
 
         Exception expectedException = new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND);
