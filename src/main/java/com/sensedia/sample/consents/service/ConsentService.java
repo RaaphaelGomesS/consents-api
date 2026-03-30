@@ -4,11 +4,15 @@ import com.sensedia.sample.consents.builder.ConsentBuilder;
 import com.sensedia.sample.consents.domain.Consent;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
+import com.sensedia.sample.consents.dto.ConsentsPageDTO;
 import com.sensedia.sample.consents.exception.ConsentException;
 import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import com.sensedia.sample.consents.repository.ConsentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +25,17 @@ import java.util.UUID;
 public class ConsentService {
 
     private final ConsentRepository repository;
+
+    public ConsentsPageDTO findAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, ConsentStatusIndicator status) {
+
+        Sort sort = Sort.by(Sort.Direction.valueOf(direction), orderBy);
+
+        PageRequest pageable = PageRequest.of(page, pageSize, sort);
+
+        Page<Consent> consentPage = repository.findAllByStatus(pageable, status);
+
+        return ConsentBuilder.from(consentPage);
+    }
 
     public ConsentResponseDTO createConsent(ConsentRequestDTO requestDTO) {
 
