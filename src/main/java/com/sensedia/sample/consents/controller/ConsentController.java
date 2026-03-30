@@ -38,10 +38,18 @@ public class ConsentController implements ConsentControllerApi {
     }
 
     @Override
-    public ResponseEntity<Void> revokeConsentById(UUID id) {
+    public ResponseEntity<ConsentResponseDTO> revokeConsentById(UUID id) {
 
-        service.findConsentById(id);
+        ConsentResponseDTO responseDTO = service.revokeConsent(id);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> updateConsent(UUID id) {
+
+        ConsentResponseDTO responseDTO = service.reactivateConsent(id);
+
+        return ResponseEntity.ok(responseDTO);
     }
 }

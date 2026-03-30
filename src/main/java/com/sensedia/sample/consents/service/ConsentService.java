@@ -38,12 +38,28 @@ public class ConsentService {
         return ConsentBuilder.from(savedConsent);
     }
 
-    public void revokeConsent(UUID id) {
+    public ConsentResponseDTO reactivateConsent(UUID id) {
         Consent consent = findConsentById(id);
 
-        consent.setStatus(ConsentStatusIndicator.REVOKED);
+        if (consent.getStatus() != ConsentStatusIndicator.ACTIVE) {
+            consent.setStatus(ConsentStatusIndicator.ACTIVE);
 
-        repository.save(consent);
+            consent = repository.save(consent);
+        }
+
+        return ConsentBuilder.from(consent);
+    }
+
+    public ConsentResponseDTO revokeConsent(UUID id) {
+        Consent consent = findConsentById(id);
+
+        if (consent.getStatus() != ConsentStatusIndicator.REVOKED) {
+            consent.setStatus(ConsentStatusIndicator.REVOKED);
+
+            consent = repository.save(consent);
+        }
+
+        return ConsentBuilder.from(consent);
     }
 
     public Consent findConsentById(UUID id) {

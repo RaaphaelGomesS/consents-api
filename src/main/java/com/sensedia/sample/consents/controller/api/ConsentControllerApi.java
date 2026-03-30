@@ -27,7 +27,7 @@ public interface ConsentControllerApi {
     @PostMapping("/")
     ResponseEntity<ConsentResponseDTO> createConsent(@RequestBody @Valid ConsentRequestDTO requestDTO);
 
-    @Operation(summary = "Busca um consentimento pelo id.")
+    @Operation(summary = "Busca o consentimento pelo id.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Consentimento encontrado."),
             @ApiResponse(responseCode = "404", description = "O consentimento não foi encontrado.", content = @Content(schema = @Schema(hidden = true)))
@@ -36,12 +36,21 @@ public interface ConsentControllerApi {
     @GetMapping("/{id}")
     ResponseEntity<ConsentResponseDTO> getConsentById(@PathVariable UUID id);
 
-    @Operation(summary = "Revogar um consentimento pelo id.")
+    @Operation(summary = "Revoga o consentimento pelo id.", description = "Atualiza o status do consetimento para REVOKED caso não esteja.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Consentimento revogado com sucesso.", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "200", description = "Consentimento revogado com sucesso."),
             @ApiResponse(responseCode = "404", description = "O consentimento não foi encontrado.", content = @Content(schema = @Schema(hidden = true)))
     }
     )
     @DeleteMapping("/{id}")
-    ResponseEntity<Void> revokeConsentById(@PathVariable UUID id);
+    ResponseEntity<ConsentResponseDTO> revokeConsentById(@PathVariable UUID id);
+
+    @Operation(summary = "Atualiza o consentimento pelo id.", description = "Atualiza o status do consetimento para ACTIVE caso não esteja.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consentimento atualizado com sucesso."),
+            @ApiResponse(responseCode = "404", description = "O consentimento não foi encontrado.", content = @Content(schema = @Schema(hidden = true)))
+    }
+    )
+    @PatchMapping("/{id}")
+    ResponseEntity<ConsentResponseDTO> updateConsent(@PathVariable UUID id);
 }
