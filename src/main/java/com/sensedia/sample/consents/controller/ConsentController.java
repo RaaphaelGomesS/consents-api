@@ -42,6 +42,6 @@ public class ConsentController implements ConsentControllerApi {
 
         service.findConsentById(id);
 
-        return null;
+        return ResponseEntity.ok(null);
     }
 }
