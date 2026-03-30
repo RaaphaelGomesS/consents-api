@@ -3,6 +3,7 @@ package com.sensedia.sample.consents.service;
 import com.sensedia.sample.consents.domain.Consent;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
+import com.sensedia.sample.consents.dto.ConsentsPageDTO;
 import com.sensedia.sample.consents.exception.ConsentException;
 import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import com.sensedia.sample.consents.repository.ConsentRepository;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
 import java.util.Optional;
@@ -32,6 +34,8 @@ class ConsentServiceTest {
 
     private Consent consent;
 
+    private Page<Consent> consentPage;
+
     private ConsentRequestDTO requestDTO;
 
     @BeforeEach
@@ -39,8 +43,23 @@ class ConsentServiceTest {
         MockitoAnnotations.openMocks(this);
 
         consent = ConsentMock.entityActiveMock();
+        consentPage = ConsentMock.pageEntityMock();
         requestDTO = ConsentRequestDTOMock.toRequest();
     }
+
+    @Test
+    void shouldFindAllConsentsByStatus() {
+        assertDoesNotThrow(() -> {
+
+            when(repository.findAllByStatus(any(), any())).thenReturn(consentPage);
+
+            ConsentsPageDTO result = consentService.findAllConsentsByStatus(1, 1, "createdAt", "ASC", ConsentStatusIndicator.ACTIVE);
+
+            assertEquals(consentPage.getSize(), result.consents().size());
+            assertEquals(consentPage.getTotalElements(), result.totalElements());
+        });
+    }
+
 
     @Test
     void shouldCreateConsent() {

@@ -5,8 +5,12 @@ import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import mocks.constants.ConstantsMocks;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -43,5 +47,12 @@ public class ConsentMock {
                 .updatedAt(LocalDateTime.now().minusDays(2))
                 .expiredAt(LocalDateTime.now().minusDays(1))
                 .build();
+    }
+
+    public static Page<Consent> pageEntityMock() {
+
+        List<Consent> consentList = Collections.singletonList(entityActiveMock());
+
+        return new PageImpl<>(consentList);
     }
 }
