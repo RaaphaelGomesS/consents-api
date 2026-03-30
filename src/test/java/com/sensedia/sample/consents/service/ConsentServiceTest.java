@@ -4,6 +4,7 @@ import com.sensedia.sample.consents.domain.Consent;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.exception.ConsentException;
+import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import com.sensedia.sample.consents.repository.ConsentRepository;
 import mocks.constants.ConstantsMocks;
 import mocks.domain.ConsentMock;
@@ -101,14 +102,84 @@ class ConsentServiceTest {
     }
 
     @Test
-    void shouldRevokeConsentById() {
+    void shouldReactivateConsentWhenIsAlreadyActive() {
         assertDoesNotThrow(() -> {
 
             when(repository.findById(any())).thenReturn(Optional.of(consent));
 
-            consentService.revokeConsent(ConstantsMocks.ID);
+            ConsentResponseDTO result = consentService.reactivateConsent(ConstantsMocks.ID);
 
-            verify(repository, times(1)).save(any());
+            verify(repository, times(0)).save(any());
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+            assertEquals(ConsentStatusIndicator.ACTIVE.getValue(), result.status());
+        });
+    }
+
+    @Test
+    void shouldRevokeConsentWhenIsExpired() {
+        assertDoesNotThrow(() -> {
+
+            consent = ConsentMock.entityExpiredMock();
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+            when(repository.save(any())).thenReturn(consent);
+
+            ConsentResponseDTO result = consentService.reactivateConsent(ConstantsMocks.ID);
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+            assertEquals(ConsentStatusIndicator.ACTIVE.getValue(), result.status());
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCantFindConsentToReactive() {
+        Exception actualException = assertThrows(Exception.class, () -> {
+
+            when(repository.findById(any())).thenReturn(Optional.empty());
+
+            consentService.reactivateConsent(ConstantsMocks.ID);
+        });
+
+        Exception expectedException = new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND);
+
+        assertInstanceOf(ConsentException.class, actualException);
+        assertEquals(expectedException.getCause(), actualException.getCause());
+        assertEquals(expectedException.getMessage(), actualException.getMessage());
+    }
+
+    @Test
+    void shouldRevokeConsentWhenIsActive() {
+        assertDoesNotThrow(() -> {
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+            when(repository.save(any())).thenReturn(consent);
+
+            ConsentResponseDTO result = consentService.revokeConsent(ConstantsMocks.ID);
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+            assertEquals(ConsentStatusIndicator.REVOKED.getValue(), result.status());
+        });
+    }
+
+    @Test
+    void shouldRevokeConsentWhenAlreadyIsRevoked() {
+        assertDoesNotThrow(() -> {
+
+            consent = ConsentMock.entityRevokedMock();
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+
+            ConsentResponseDTO result = consentService.revokeConsent(ConstantsMocks.ID);
+
+            verify(repository, times(0)).save(any());
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+            assertEquals(ConsentStatusIndicator.REVOKED.getValue(), result.status());
         });
     }
 
