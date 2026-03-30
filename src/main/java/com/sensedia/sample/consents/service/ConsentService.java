@@ -55,7 +55,7 @@ public class ConsentService {
     }
 
     public ConsentResponseDTO reactivateConsent(UUID id) {
-        Consent consent = findConsentById(id);
+        Consent consent = fetchAndSyncStatusWhenIsExpired(id);
 
         if (consent.getStatus() != ConsentStatusIndicator.ACTIVE) {
             consent.setStatus(ConsentStatusIndicator.ACTIVE);
@@ -68,7 +68,7 @@ public class ConsentService {
     }
 
     public ConsentResponseDTO revokeConsent(UUID id) {
-        Consent consent = findConsentById(id);
+        Consent consent = fetchAndSyncStatusWhenIsExpired(id);
 
         if (consent.getStatus() != ConsentStatusIndicator.REVOKED) {
             consent.setStatus(ConsentStatusIndicator.REVOKED);
@@ -80,9 +80,21 @@ public class ConsentService {
         return ConsentBuilder.from(consent);
     }
 
-    public Consent findConsentById(UUID id) {
-        return repository.findById(id)
-                .orElseThrow(() -> new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND));
+    public ConsentResponseDTO findConsentById(UUID id) {
+        Consent consent = fetchAndSyncStatusWhenIsExpired(id);
+
+        return ConsentBuilder.from(consent);
+    }
+
+    private Consent fetchAndSyncStatusWhenIsExpired(UUID id) {
+
+        Consent consent = repository.findById(id).orElseThrow(() -> new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND));
+
+        if (consent.getStatus() != ConsentStatusIndicator.EXPIRED && consent.getExpiredAt() != null && consent.getExpiredAt().isBefore(LocalDateTime.now())) {
+            consent.setStatus(ConsentStatusIndicator.EXPIRED);
+        }
+
+        return consent;
     }
 
     private String normalizeCPF(String cpf) {

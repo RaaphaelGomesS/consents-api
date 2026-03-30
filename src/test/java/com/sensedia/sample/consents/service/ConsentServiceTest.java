@@ -97,10 +97,10 @@ class ConsentServiceTest {
 
             when(repository.findById(any())).thenReturn(Optional.of(consent));
 
-            Consent result = consentService.findConsentById(ConstantsMocks.ID);
+            ConsentResponseDTO result = consentService.findConsentById(ConstantsMocks.ID);
 
-            assertEquals(consent.getId(), result.getId());
-            assertEquals(consent.getCpf(), result.getCpf());
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
         });
     }
 
