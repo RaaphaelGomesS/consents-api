@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Slf4j
@@ -43,6 +44,7 @@ public class ConsentService {
 
         if (consent.getStatus() != ConsentStatusIndicator.ACTIVE) {
             consent.setStatus(ConsentStatusIndicator.ACTIVE);
+            consent.setExpiredAt(LocalDateTime.now().plusMonths(1L));
 
             consent = repository.save(consent);
         }
@@ -55,6 +57,7 @@ public class ConsentService {
 
         if (consent.getStatus() != ConsentStatusIndicator.REVOKED) {
             consent.setStatus(ConsentStatusIndicator.REVOKED);
+            consent.setExpiredAt(null);
 
             consent = repository.save(consent);
         }
