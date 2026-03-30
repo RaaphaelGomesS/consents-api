@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.UUID;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +25,13 @@ public class ConsentController implements ConsentControllerApi {
         ConsentResponseDTO responseDTO = service.createConsent(requestDTO);
 
         return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> getConsentById(UUID id) {
+
+        ConsentResponseDTO responseDTO = service.findConsentById(id);
+
+        return ResponseEntity.ok(responseDTO);
     }
 }

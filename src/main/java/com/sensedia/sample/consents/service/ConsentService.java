@@ -11,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.UUID;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,6 +35,13 @@ public class ConsentService {
         Consent savedConsent = repository.save(consent);
 
         return ConsentBuilder.from(savedConsent);
+    }
+
+    public ConsentResponseDTO findConsentById(UUID id) {
+        Consent consent = repository.findById(id)
+                .orElseThrow(() -> new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND));
+
+        return ConsentBuilder.from(consent);
     }
 
     private String normalizeCPF(String cpf) {

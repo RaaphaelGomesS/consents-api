@@ -10,9 +10,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.UUID;
 
 @RequestMapping(value = "/v1/consents")
 @Tag(name = "Consentimento", description = "Endpoints para operações de consentimento para uso de dados dos usuários.")
@@ -26,4 +26,13 @@ public interface ConsentControllerApi {
     )
     @PostMapping("/")
     ResponseEntity<ConsentResponseDTO> createConsent(@RequestBody @Valid ConsentRequestDTO requestDTO);
+
+    @Operation(summary = "Busca um consentimento pelo id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consentimento encontrado."),
+            @ApiResponse(responseCode = "404", description = "O consentimento não foi encontrado.", content = @Content(schema = @Schema(hidden = true)))
+    }
+    )
+    @GetMapping("/{id}")
+    ResponseEntity<ConsentResponseDTO> getConsentById(@PathVariable UUID id);
 }
