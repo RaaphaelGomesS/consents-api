@@ -35,4 +35,13 @@ public interface ConsentControllerApi {
     )
     @GetMapping("/{id}")
     ResponseEntity<ConsentResponseDTO> getConsentById(@PathVariable UUID id);
+
+    @Operation(summary = "Revogar um consentimento pelo id.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Consentimento revogado com sucesso.", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "404", description = "O consentimento não foi encontrado.", content = @Content(schema = @Schema(hidden = true)))
+    }
+    )
+    @DeleteMapping("/{id}")
+    ResponseEntity<Void> revokeConsentById(@PathVariable UUID id);
 }

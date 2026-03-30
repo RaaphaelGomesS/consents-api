@@ -5,6 +5,7 @@ import com.sensedia.sample.consents.domain.Consent;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.exception.ConsentException;
+import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import com.sensedia.sample.consents.repository.ConsentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,11 +38,17 @@ public class ConsentService {
         return ConsentBuilder.from(savedConsent);
     }
 
-    public ConsentResponseDTO findConsentById(UUID id) {
-        Consent consent = repository.findById(id)
-                .orElseThrow(() -> new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND));
+    public void revokeConsent(UUID id) {
+        Consent consent = findConsentById(id);
 
-        return ConsentBuilder.from(consent);
+        consent.setStatus(ConsentStatusIndicator.REVOKED);
+
+        repository.save(consent);
+    }
+
+    public Consent findConsentById(UUID id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND));
     }
 
     private String normalizeCPF(String cpf) {

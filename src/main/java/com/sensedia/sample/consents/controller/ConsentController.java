@@ -1,6 +1,8 @@
 package com.sensedia.sample.consents.controller;
 
+import com.sensedia.sample.consents.builder.ConsentBuilder;
 import com.sensedia.sample.consents.controller.api.ConsentControllerApi;
+import com.sensedia.sample.consents.domain.Consent;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.service.ConsentService;
@@ -30,8 +32,16 @@ public class ConsentController implements ConsentControllerApi {
     @Override
     public ResponseEntity<ConsentResponseDTO> getConsentById(UUID id) {
 
-        ConsentResponseDTO responseDTO = service.findConsentById(id);
+        Consent consent = service.findConsentById(id);
 
-        return ResponseEntity.ok(responseDTO);
+        return ResponseEntity.ok(ConsentBuilder.from(consent));
+    }
+
+    @Override
+    public ResponseEntity<Void> revokeConsentById(UUID id) {
+
+        service.findConsentById(id);
+
+        return null;
     }
 }
