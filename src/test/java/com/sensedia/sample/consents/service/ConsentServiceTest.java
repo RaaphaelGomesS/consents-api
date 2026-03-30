@@ -5,6 +5,7 @@ import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.exception.ConsentException;
 import com.sensedia.sample.consents.repository.ConsentRepository;
+import mocks.constants.ConstantsMocks;
 import mocks.domain.ConsentMock;
 import mocks.request.ConsentRequestDTOMock;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,11 +15,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpStatus;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-public class ConsentServiceTest {
+class ConsentServiceTest {
 
     @InjectMocks
     private ConsentService consentService;
@@ -62,6 +65,35 @@ public class ConsentServiceTest {
         });
 
         Exception expectedException = new ConsentException("O consentimento já foi criado.", HttpStatus.BAD_REQUEST);
+
+        assertInstanceOf(ConsentException.class, actualException);
+        assertEquals(expectedException.getCause(), actualException.getCause());
+        assertEquals(expectedException.getMessage(), actualException.getMessage());
+    }
+
+    @Test
+    void shouldFindConsentById() {
+        assertDoesNotThrow(() -> {
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+
+            ConsentResponseDTO result = consentService.findConsentById(ConstantsMocks.ID);
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+        });
+    }
+
+    @Test
+    void shouldThrowExceptionWhenCantFindConsent() {
+        Exception actualException = assertThrows(Exception.class, () -> {
+
+            when(repository.findById(any())).thenReturn(Optional.empty());
+
+            consentService.findConsentById(ConstantsMocks.ID);
+        });
+
+        Exception expectedException = new ConsentException("O consentimento não foi encontrado.", HttpStatus.NOT_FOUND);
 
         assertInstanceOf(ConsentException.class, actualException);
         assertEquals(expectedException.getCause(), actualException.getCause());
