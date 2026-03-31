@@ -15,7 +15,7 @@ import java.util.UUID;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConsentBuilder {
 
-    private static final LocalDateTime EXPIRE = LocalDateTime.now().plusMinutes(30L);
+    private static final LocalDateTime EXPIRE = LocalDateTime.now().plusMonths(2L);
 
     public static ConsentsPageDTO from(Page<Consent> consentPage) {
 
@@ -44,6 +44,7 @@ public class ConsentBuilder {
                 .builder()
                 .id(UUID.randomUUID())
                 .cpf(normalizeCPF)
+                .createdAt(LocalDateTime.now())
                 .status(ConsentStatusIndicator.ACTIVE)
                 .expiredAt(EXPIRE)
                 .build();

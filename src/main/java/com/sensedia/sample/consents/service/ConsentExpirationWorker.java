@@ -31,8 +31,8 @@ public class ConsentExpirationWorker {
 
         if (!expiredConsents.isEmpty()) {
             expiredConsents.forEach(consent -> consent.setStatus(ConsentStatusIndicator.EXPIRED));
-        }
 
-        repository.saveAll(expiredConsents);
+            repository.saveAll(expiredConsents);
+        }
     }
 }

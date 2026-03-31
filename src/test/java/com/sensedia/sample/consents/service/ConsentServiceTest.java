@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -60,7 +61,6 @@ class ConsentServiceTest {
         });
     }
 
-
     @Test
     void shouldCreateConsent() {
         assertDoesNotThrow(() -> {
@@ -101,6 +101,23 @@ class ConsentServiceTest {
 
             assertEquals(consent.getId(), result.id());
             assertEquals(consent.getCpf(), result.cpf());
+        });
+    }
+
+    @Test
+    void shouldFindConsentByIdAndUpdateStatusIfHitTheExpiredDate() {
+        assertDoesNotThrow(() -> {
+
+            consent.setExpiredAt(LocalDateTime.now().minusDays(1L));
+
+            when(repository.findById(any())).thenReturn(Optional.of(consent));
+            when(repository.save(any())).thenReturn(consent);
+
+            ConsentResponseDTO result = consentService.findConsentById(ConstantsMocks.ID);
+
+            assertEquals(consent.getId(), result.id());
+            assertEquals(consent.getCpf(), result.cpf());
+            assertEquals(ConsentStatusIndicator.EXPIRED , consent.getStatus());
         });
     }
 

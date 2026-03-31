@@ -49,10 +49,11 @@ public class ConsentMock {
                 .build();
     }
 
+    public static List<Consent> toList() {
+        return Collections.singletonList(entityActiveMock());
+    }
+
     public static Page<Consent> pageEntityMock() {
-
-        List<Consent> consentList = Collections.singletonList(entityActiveMock());
-
-        return new PageImpl<>(consentList);
+        return new PageImpl<>(toList());
     }
 }
