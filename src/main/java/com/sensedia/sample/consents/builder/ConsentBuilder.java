@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,9 @@ public class ConsentBuilder {
 
     public static ConsentsPageDTO from(Page<Consent> consentPage) {
 
-        List<ConsentResponseDTO> consentDTOs = consentPage.getContent().stream().map(ConsentBuilder::from).toList();
+        List<ConsentResponseDTO> consentDTOs = !consentPage.getContent().isEmpty() ?
+                consentPage.getContent().stream().map(ConsentBuilder::from).toList()
+                : Collections.emptyList();
 
         return ConsentsPageDTO.builder()
                 .page(consentPage.getNumber())
