@@ -28,7 +28,16 @@ Esta é uma API REST desenvolvida em Spring para o gerenciamento de consentiment
 
 ## 🚀 Como executar a aplicação
 
-### 1. Configuração do ambiente (.env)
+### Opção 1: Teste rápido (O banco de dados é criado automaticamente via Testcontainers e destruído assim que a aplicação for encerrada. **Não requer** configuração prévia de variáveis de ambiente ou execução de comandos Docker.)
+
+Para ter o ciclo de vida completo da aplicação e do banco de dados gerenciados pela sua IDE:
+1. Navegue até o diretório de testes (`src/test/java/...`).
+2. Localize a classe `TestConsentsApplication.java`.
+3. Execute o método `main` desta classe (clicando no botão de "Play" ou via atalho de execução da sua IDE).
+
+### Opção 2: Testes exaustivos (Container persistente: Sessões longas de desenvolvimento onde você precisa que os dados sobrevivam a reinicializações da API)
+
+#### 1. Configuração do ambiente (.env)
 A aplicação utiliza um arquivo `.env` para gerenciar as credenciais do banco de dados de forma segura. Na raiz do projeto, crie um arquivo chamado `.env` (você pode se basear no conteúdo abaixo):
 
 ```env
@@ -37,7 +46,7 @@ MONGO_DB_PASSWORD=secret
 MONGO_DB_DATABASE=consents_db
 ```
 
-### 2. Subindo o banco de dados (MongoDB)
+#### 2. Subindo o banco de dados (MongoDB)
 
 Com o Docker em execução na sua máquina, utilize o docker compose na raiz do projeto para subir o container do MongoDB:
 
@@ -47,7 +56,7 @@ docker compose up -d
 
 O banco estará disponível localmente na porta 27017.
 
-### 3. Iniciando a aplicação
+#### 3. Iniciando a aplicação
 
 Você pode iniciar a aplicação utilizando o Maven Wrapper que já vem no projeto:
 
