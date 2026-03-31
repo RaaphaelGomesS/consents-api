@@ -184,6 +184,22 @@ class ConsentsControllerIT {
     }
 
     @Test
+    void shouldGetBadRequestWhenTryToCreateConsentWithInvalidCPF() {
+        assertDoesNotThrow(() -> {
+
+            repository.save(consentMock);
+
+            MvcResult result = mockMvc.perform(post(URI)
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .content("{\"cpf\": \"123.456.789-10\"}"))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(HttpStatus.BAD_REQUEST.value(), result.getResponse().getStatus());
+        });
+    }
+
+    @Test
     void shouldRevokeConsent() {
         assertDoesNotThrow(() -> {
 
