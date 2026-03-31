@@ -5,4 +5,4 @@ spring:
     name: consents
   data:
     mongodb:
-      uri: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_PASSWORD}@localhost:27017/${MONGO_DB_DATABASE}
+      uri: mongodb://${MONGO_DB_USERNAME}:${MONGO_DB_PASSWORD}@localhost:27017/${MONGO_DB_DATABASE}?authSource=admin

@@ -18,7 +18,7 @@ public class ConsentExpirationWorker {
 
     private final ConsentRepository repository;
 
-    @Scheduled(cron = "0 0 9 * * * ")
+    @Scheduled(cron = "0 0 12 * * * ")
     public void checkExpirationDates() {
 
         log.info("Executando verificação de consentimentos expirados: ");

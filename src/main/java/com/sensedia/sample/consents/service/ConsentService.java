@@ -39,15 +39,13 @@ public class ConsentService {
 
     public ConsentResponseDTO createConsent(ConsentRequestDTO requestDTO) {
 
-        String normalizeCPF = normalizeCPF(requestDTO.cpf());
+        log.info("CPF: {}", requestDTO.cpf());
 
-        log.info("CPF normalizado: {}", normalizeCPF);
-
-        if (repository.existsByCpf(normalizeCPF)) {
+        if (repository.existsByCpf(requestDTO.cpf())) {
             throw new ConsentException("O consentimento já foi criado.", HttpStatus.BAD_REQUEST);
         }
 
-        Consent consent = ConsentBuilder.from(normalizeCPF);
+        Consent consent = ConsentBuilder.from(requestDTO.cpf());
 
         Consent savedConsent = repository.save(consent);
 
@@ -92,12 +90,9 @@ public class ConsentService {
 
         if (consent.getStatus() != ConsentStatusIndicator.EXPIRED && consent.getExpiredAt() != null && consent.getExpiredAt().isBefore(LocalDateTime.now())) {
             consent.setStatus(ConsentStatusIndicator.EXPIRED);
+            return repository.save(consent);
         }
 
         return consent;
-    }
-
-    private String normalizeCPF(String cpf) {
-        return cpf.replace("\\D", "");
     }
 }

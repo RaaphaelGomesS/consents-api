@@ -53,7 +53,7 @@ class ConsentServiceTest {
 
             when(repository.findAllByStatus(any(), any())).thenReturn(consentPage);
 
-            ConsentsPageDTO result = consentService.findAllConsentsByStatus(1, 1, "createdAt", "ASC", ConsentStatusIndicator.ACTIVE);
+            ConsentsPageDTO result = consentService.findAllConsentsByStatus(0, 10, "createdAt", "ASC", ConsentStatusIndicator.ACTIVE);
 
             assertEquals(consentPage.getSize(), result.consents().size());
             assertEquals(consentPage.getTotalElements(), result.totalElements());

@@ -10,11 +10,12 @@ import org.springframework.data.domain.Page;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ConsentBuilder {
 
-    private static final LocalDateTime EXPIRE = LocalDateTime.now().plusMonths(1L);
+    private static final LocalDateTime EXPIRE = LocalDateTime.now().plusMinutes(30L);
 
     public static ConsentsPageDTO from(Page<Consent> consentPage) {
 
@@ -41,6 +42,7 @@ public class ConsentBuilder {
     public static Consent from(String normalizeCPF) {
         return Consent
                 .builder()
+                .id(UUID.randomUUID())
                 .cpf(normalizeCPF)
                 .status(ConsentStatusIndicator.ACTIVE)
                 .expiredAt(EXPIRE)

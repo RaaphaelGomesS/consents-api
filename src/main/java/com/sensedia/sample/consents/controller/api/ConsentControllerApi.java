@@ -26,7 +26,7 @@ public interface ConsentControllerApi {
     }
     )
     @GetMapping("/")
-    ResponseEntity<ConsentsPageDTO> getAllConsentsByStatus(@RequestParam(value = "page", required = false, defaultValue = "1") int page,
+    ResponseEntity<ConsentsPageDTO> getAllConsentsByStatus(@RequestParam(value = "page", required = false, defaultValue = "0") int page,
                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                                            @RequestParam(value = "page", required = false, defaultValue = "createdAt") String orderBy,
                                                            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction,
