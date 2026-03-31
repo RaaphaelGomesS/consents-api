@@ -1,18 +1,63 @@
 package com.sensedia.sample.consents.controller;
 
-import com.sensedia.sample.consents.controller.doc.ConsentControllerDoc;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-
+import com.sensedia.sample.consents.controller.api.ConsentControllerApi;
+import com.sensedia.sample.consents.dto.ConsentRequestDTO;
+import com.sensedia.sample.consents.dto.ConsentResponseDTO;
+import com.sensedia.sample.consents.dto.ConsentsPageDTO;
+import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
+import com.sensedia.sample.consents.service.ConsentService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 @Slf4j
-@Controller
-public class ConsentController implements ConsentControllerDoc {
+@RestController
+@RequiredArgsConstructor
+public class ConsentController implements ConsentControllerApi {
 
-	@Override
-	public ResponseEntity<Object> findAll() {
-		log.info("Requisição recebida!!!!!!");
-		return ResponseEntity.badRequest().body("Dummy");
-	}
+    private final ConsentService service;
+
+    @Override
+    public ResponseEntity<ConsentsPageDTO> getAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, ConsentStatusIndicator status) {
+
+        ConsentsPageDTO pagedResponse = service.findAllConsentsByStatus(page, pageSize, orderBy, direction, status);
+
+        return ResponseEntity.ok(pagedResponse);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> getConsentById(UUID id) {
+
+        ConsentResponseDTO responseDTO = service.findConsentById(id);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> createConsent(ConsentRequestDTO requestDTO) {
+
+        ConsentResponseDTO responseDTO = service.createConsent(requestDTO);
+
+        return new ResponseEntity<>(responseDTO, HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> revokeConsentById(UUID id) {
+
+        ConsentResponseDTO responseDTO = service.revokeConsent(id);
+
+        return ResponseEntity.ok(responseDTO);
+    }
+
+    @Override
+    public ResponseEntity<ConsentResponseDTO> updateConsent(UUID id) {
+
+        ConsentResponseDTO responseDTO = service.reactivateConsent(id);
+
+        return ResponseEntity.ok(responseDTO);
+    }
 }
