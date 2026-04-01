@@ -95,7 +95,7 @@ class ConsentsControllerIT {
                             .param("pageSize", "10")
                             .param("orderBy", "createdAt")
                             .param("direction", "ASC")
-                            .param("status", "EXPIRED"))
+                            .param("status", "Expirado"))
                     .andExpect(status().isOk())
                     .andReturn();
 

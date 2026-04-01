@@ -54,7 +54,7 @@ class ConsentServiceTest {
 
             when(repository.findAllByStatus(any(), any())).thenReturn(consentPage);
 
-            ConsentsPageDTO result = consentService.findAllConsentsByStatus(0, 10, "createdAt", "ASC", ConsentStatusIndicator.ACTIVE);
+            ConsentsPageDTO result = consentService.findAllConsentsByStatus(0, 10, "createdAt", "ASC", "Ativo");
 
             assertEquals(consentPage.getSize(), result.consents().size());
             assertEquals(consentPage.getTotalElements(), result.totalElements());
@@ -117,7 +117,7 @@ class ConsentServiceTest {
 
             assertEquals(consent.getId(), result.id());
             assertEquals(consent.getCpf(), result.cpf());
-            assertEquals(ConsentStatusIndicator.EXPIRED , consent.getStatus());
+            assertEquals(ConsentStatusIndicator.EXPIRED, consent.getStatus());
         });
     }
 

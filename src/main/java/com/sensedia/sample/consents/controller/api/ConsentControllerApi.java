@@ -3,7 +3,6 @@ package com.sensedia.sample.consents.controller.api;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.dto.ConsentsPageDTO;
-import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -30,7 +29,7 @@ public interface ConsentControllerApi {
                                                            @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize,
                                                            @RequestParam(value = "orderBy", required = false, defaultValue = "createdAt") String orderBy,
                                                            @RequestParam(value = "direction", required = false, defaultValue = "ASC") String direction,
-                                                           @RequestParam(value = "status", required = false, defaultValue = "ACTIVE") ConsentStatusIndicator status
+                                                           @RequestParam(value = "status", required = false, defaultValue = "Ativo") String status
     );
 
     @Operation(summary = "Busca o consentimento pelo id.")

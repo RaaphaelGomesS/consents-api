@@ -4,7 +4,6 @@ import com.sensedia.sample.consents.controller.api.ConsentControllerApi;
 import com.sensedia.sample.consents.dto.ConsentRequestDTO;
 import com.sensedia.sample.consents.dto.ConsentResponseDTO;
 import com.sensedia.sample.consents.dto.ConsentsPageDTO;
-import com.sensedia.sample.consents.indicator.ConsentStatusIndicator;
 import com.sensedia.sample.consents.service.ConsentService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +21,7 @@ public class ConsentController implements ConsentControllerApi {
     private final ConsentService service;
 
     @Override
-    public ResponseEntity<ConsentsPageDTO> getAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, ConsentStatusIndicator status) {
+    public ResponseEntity<ConsentsPageDTO> getAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, String status) {
 
         ConsentsPageDTO pagedResponse = service.findAllConsentsByStatus(page, pageSize, orderBy, direction, status);
 

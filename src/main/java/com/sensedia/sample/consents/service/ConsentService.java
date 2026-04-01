@@ -26,13 +26,15 @@ public class ConsentService {
 
     private final ConsentRepository repository;
 
-    public ConsentsPageDTO findAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, ConsentStatusIndicator status) {
+    public ConsentsPageDTO findAllConsentsByStatus(int page, int pageSize, String orderBy, String direction, String status) {
+
+        ConsentStatusIndicator statusIndicator = ConsentStatusIndicator.getStatusFromValue(status);
 
         Sort sort = Sort.by(Sort.Direction.valueOf(direction), orderBy);
 
         PageRequest pageable = PageRequest.of(page, pageSize, sort);
 
-        Page<Consent> consentPage = repository.findAllByStatus(pageable, status);
+        Page<Consent> consentPage = repository.findAllByStatus(pageable, statusIndicator);
 
         return ConsentBuilder.from(consentPage);
     }
